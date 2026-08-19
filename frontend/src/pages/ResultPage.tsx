@@ -1,10 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../lib/api';
+import ImageComparisonSlider from '../components/ImageComparisonSlider';
+import ZoomableImage from '../components/ZoomableImage';
 
 interface GenerationStatus {
   id: string;
   status: 'pending' | 'processing' | 'completed' | 'failed';
+  personImageUrl?: string;
   resultImageUrl?: string;
   error?: string;
 }
@@ -13,17 +16,14 @@ export default function ResultPage() {
   const { id } = useParams<{ id: string }>();
   const [status, setStatus] = useState<GenerationStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [view, setView] = useState<'slider' | 'side-by-side'>('slider');
 
   const pollStatus = useCallback(async () => {
-    if (!id) return;
+    if (!id) return true;
     try {
       const res = await api.get<GenerationStatus>(`/api/ai/status/${id}`);
       setStatus(res.data);
-
-      if (res.data.status === 'completed' || res.data.status === 'failed') {
-        return true;
-      }
-      return false;
+      return res.data.status === 'completed' || res.data.status === 'failed';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to check status');
       return true;
@@ -32,7 +32,6 @@ export default function ResultPage() {
 
   useEffect(() => {
     if (!id) return;
-
     let active = true;
     const poll = async () => {
       while (active) {
@@ -42,10 +41,7 @@ export default function ResultPage() {
       }
     };
     poll();
-
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [id, pollStatus]);
 
   if (error) {
@@ -79,16 +75,46 @@ export default function ResultPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Try-On Result</h1>
-      {status.resultImageUrl && (
-        <img
-          src={status.resultImageUrl}
-          alt="Try-on result"
-          className="max-w-full max-h-[70vh] rounded-lg shadow-lg mb-8"
-        />
-      )}
-      <div className="flex gap-4">
+    <div className="min-h-screen p-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">Your Try-On Result</h1>
+
+      <div className="flex justify-center gap-2 mb-6">
+        <button
+          onClick={() => setView('slider')}
+          className={`px-4 py-2 text-sm rounded-lg ${view === 'slider' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'}`}
+        >
+          Comparison Slider
+        </button>
+        <button
+          onClick={() => setView('side-by-side')}
+          className={`px-4 py-2 text-sm rounded-lg ${view === 'side-by-side' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'}`}
+        >
+          Side by Side
+        </button>
+      </div>
+
+      <div className="flex justify-center mb-8">
+        {view === 'slider' && status.personImageUrl && status.resultImageUrl ? (
+          <ImageComparisonSlider beforeUrl={status.personImageUrl} afterUrl={status.resultImageUrl} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+            {status.personImageUrl && (
+              <div className="text-center">
+                <p className="text-sm text-gray-500 mb-2">Original</p>
+                <ZoomableImage src={status.personImageUrl} alt="Original" />
+              </div>
+            )}
+            {status.resultImageUrl && (
+              <div className="text-center">
+                <p className="text-sm text-gray-500 mb-2">Result</p>
+                <ZoomableImage src={status.resultImageUrl} alt="Result" />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-center gap-4">
         <Link
           to="/upload"
           className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"

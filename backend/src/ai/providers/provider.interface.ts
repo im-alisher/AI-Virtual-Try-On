@@ -9,6 +9,7 @@ export interface GenerateTryOnParams {
 export interface TryOnGenerationResult {
   id: string;
   status: 'pending' | 'processing' | 'completed' | 'failed';
+  personImageUrl?: string;
   resultImageUrl?: string;
   error?: string;
 }

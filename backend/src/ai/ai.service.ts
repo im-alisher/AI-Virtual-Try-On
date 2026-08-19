@@ -6,6 +6,7 @@ interface GenerationRecord {
   id: string;
   replicateId: string;
   status: TryOnGenerationResult['status'];
+  personImageUrl: string;
   resultImageUrl?: string;
   error?: string;
   createdAt: string;
@@ -37,6 +38,7 @@ export class AiService {
       id: generationId,
       replicateId: result.id,
       status: result.status,
+      personImageUrl: dto.personImage.url,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -59,6 +61,7 @@ export class AiService {
     return {
       id: record.id,
       status: record.status,
+      personImageUrl: record.personImageUrl,
       resultImageUrl: record.resultImageUrl,
       error: record.error,
     };
