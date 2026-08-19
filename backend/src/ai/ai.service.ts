@@ -68,7 +68,25 @@ export class AiService {
   }
 
   private startPolling(generationId: string, replicateId: string) {
+    const POLL_INTERVAL_MS = 3000;
+    const MAX_POLL_TIME_MS = 5 * 60 * 1000; // 5 minutes
+    let elapsed = 0;
+
     const interval = setInterval(async () => {
+      elapsed += POLL_INTERVAL_MS;
+
+      if (elapsed >= MAX_POLL_TIME_MS) {
+        this.stopPolling(generationId);
+        const record = this.generations.get(generationId);
+        if (record) {
+          record.status = 'failed';
+          record.error = 'Generation timed out after 5 minutes';
+          record.updatedAt = new Date().toISOString();
+        }
+        this.logger.warn(`Generation ${generationId} timed out`);
+        return;
+      }
+
       try {
         const status = await this.provider.getStatus(replicateId);
         const record = this.generations.get(generationId);
@@ -89,7 +107,7 @@ export class AiService {
       } catch (err) {
         this.logger.error(`Polling error for ${generationId}: ${err}`);
       }
-    }, 3000);
+    }, POLL_INTERVAL_MS);
 
     this.pollIntervals.set(generationId, interval);
   }
