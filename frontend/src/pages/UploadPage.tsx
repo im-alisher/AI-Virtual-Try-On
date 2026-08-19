@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
+import ClothingCategorySelector from '../components/ClothingCategorySelector';
 import api from '../lib/api';
-import type { UploadImageDto } from 'shared';
+import type { ClothingCategory, UploadImageDto } from 'shared';
 
 export default function UploadPage() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function UploadPage() {
   const [clothingFile, setClothingFile] = useState<File | null>(null);
   const [personPreview, setPersonPreview] = useState<string | null>(null);
   const [clothingPreview, setClothingPreview] = useState<string | null>(null);
+  const [clothingCategory, setClothingCategory] = useState<ClothingCategory | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,8 +27,10 @@ export default function UploadPage() {
     setError(null);
   }, []);
 
+  const canGenerate = personFile && clothingFile && clothingCategory && !uploading;
+
   const handleGenerate = useCallback(async () => {
-    if (!personFile || !clothingFile) return;
+    if (!canGenerate) return;
     setUploading(true);
     setError(null);
 
@@ -42,6 +46,7 @@ export default function UploadPage() {
       const generateRes = await api.post<{ id: string }>('/api/ai/generate', {
         personImage: personRes.data,
         clothingImage: clothingRes.data,
+        clothingCategory,
       });
 
       navigate(`/result/${generateRes.data.id}`);
@@ -50,7 +55,7 @@ export default function UploadPage() {
     } finally {
       setUploading(false);
     }
-  }, [personFile, clothingFile, navigate]);
+  }, [personFile, clothingFile, clothingCategory, canGenerate, navigate]);
 
   return (
     <div className="min-h-screen p-8">
@@ -69,13 +74,18 @@ export default function UploadPage() {
           disabled={uploading}
         />
       </div>
+      <ClothingCategorySelector
+        selected={clothingCategory}
+        onSelect={setClothingCategory}
+        disabled={uploading}
+      />
       {error && (
         <p className="text-center text-red-600 mb-4">{error}</p>
       )}
       <div className="text-center">
         <button
           onClick={handleGenerate}
-          disabled={!personFile || !clothingFile || uploading}
+          disabled={!canGenerate}
           className="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {uploading ? 'Uploading...' : 'Generate Try-On'}
