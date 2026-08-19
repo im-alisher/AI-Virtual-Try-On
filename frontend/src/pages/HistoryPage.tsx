@@ -50,18 +50,18 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Generation History</h1>
+    <main className="app-container py-12">
+      <div className="mb-9 flex flex-wrap items-end justify-between gap-4"><div><p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#6b856f]">Your wardrobe</p><h1 className="display-font text-4xl font-extrabold tracking-tight">My looks</h1><p className="mt-2 text-[#737c75]">Revisit, download, or remove your previous try-ons.</p></div><Link to="/upload" className="btn-primary">Create new look →</Link></div>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {generations.length === 0 ? (
-        <div className="text-center text-gray-500">
-          <p>No generations yet.</p>
-          <Link to="/upload" className="text-indigo-600 hover:underline">Create your first one</Link>
+        <div className="surface py-20 text-center text-gray-500">
+          <p className="display-font text-xl font-bold text-[#26342b]">Your wardrobe is waiting</p>
+          <Link to="/upload" className="mt-4 inline-block font-bold text-[#4e7358] hover:underline">Create your first look →</Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {generations.map((gen) => (
-            <div key={gen.id} className="bg-white rounded-lg shadow overflow-hidden">
+            <div key={gen.id} className="surface overflow-hidden !rounded-[20px] transition-transform hover:-translate-y-1">
               {gen.resultImageUrl ? (
                 <img src={gen.resultImageUrl} alt="Result" className="w-full h-48 object-cover" />
               ) : (
@@ -77,7 +77,7 @@ export default function HistoryPage() {
                 <div className="flex gap-2">
                   <Link
                     to={`/result/${gen.id}`}
-                    className="text-sm text-indigo-600 hover:underline"
+                  className="text-sm font-bold text-[#355e42] hover:underline"
                   >
                     View
                   </Link>
@@ -102,6 +102,6 @@ export default function HistoryPage() {
           ))}
         </div>
       )}
-    </div>
+    </main>
   );
 }

@@ -17,24 +17,24 @@ interface Props {
 
 export default function ClothingCategorySelector({ selected, onSelect, disabled }: Props) {
   return (
-    <div className="text-center mb-8">
-      <p className="text-sm font-medium text-gray-700 mb-3">Select Clothing Type</p>
-      <div className="flex flex-wrap justify-center gap-3">
+    <div className="mb-8">
+      <p className="mb-3 font-bold text-[#26342b]">What type of garment is it?</p>
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
         {CLOTHING_OPTIONS.map((option) => (
           <button
             key={option.value}
             onClick={() => onSelect(option.value)}
             disabled={disabled}
             className={`
-              px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all
+              flex flex-col items-center gap-2 rounded-xl border px-3 py-3 text-sm font-bold transition-all
               ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               ${selected === option.value
-                ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                ? 'border-[#52735b] bg-[#eaf1e5] text-[#173f2d] shadow-sm'
+                : 'border-[#e0e2dc] bg-white text-[#667068] hover:border-[#aab7ad]'
               }
             `}
           >
-            <span className="mr-1">{option.icon}</span>
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-[#f0f1ed]">{option.icon}</span>
             {option.label}
           </button>
         ))}

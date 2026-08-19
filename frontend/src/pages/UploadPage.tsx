@@ -58,9 +58,11 @@ export default function UploadPage() {
   }, [personFile, clothingFile, clothingCategory, canGenerate, navigate]);
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Upload Images</h1>
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <main className="app-container py-10 sm:py-14">
+      <div className="mx-auto mb-10 max-w-2xl text-center"><div className="mb-4 inline-flex rounded-full bg-[#e8efd9] px-3 py-1 text-xs font-bold uppercase tracking-[.16em] text-[#527047]">Virtual fitting room</div><h1 className="display-font text-4xl font-extrabold tracking-[-.04em] sm:text-5xl">Create your next look</h1><p className="mt-4 text-lg text-[#68726b]">Two images are all it takes. For the best result, use well-lit photos with a simple background.</p></div>
+      <div className="surface mx-auto max-w-5xl p-5 sm:p-8">
+      <div className="mb-7 flex items-center justify-center gap-3 text-xs font-bold text-[#657068]"><span className="grid h-7 w-7 place-items-center rounded-full bg-[#173f2d] text-white">1</span><span>Upload</span><span className="h-px w-10 bg-[#d8dcd6]"/><span className="grid h-7 w-7 place-items-center rounded-full bg-[#edf0eb]">2</span><span>Generate</span><span className="h-px w-10 bg-[#d8dcd6]"/><span className="grid h-7 w-7 place-items-center rounded-full bg-[#edf0eb]">3</span><span>Enjoy</span></div>
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 mb-8">
         <ImageUpload
           label="Person Photo"
           onUpload={handlePersonUpload}
@@ -79,18 +81,17 @@ export default function UploadPage() {
         onSelect={setClothingCategory}
         disabled={uploading}
       />
-      {error && (
-        <p className="text-center text-red-600 mb-4">{error}</p>
-      )}
-      <div className="text-center">
+      {error && <p className="mx-auto mb-4 max-w-xl rounded-xl bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-700">{error}</p>}
+      <div className="text-center border-t border-[#e8e8e0] pt-6">
         <button
           onClick={handleGenerate}
           disabled={!canGenerate}
-          className="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-primary min-w-[220px] !py-4"
         >
-          {uploading ? 'Uploading...' : 'Generate Try-On'}
+          {uploading ? 'Creating your look...' : 'Generate my try-on  ✦'}
         </button>
-      </div>
-    </div>
+        <p className="mt-3 text-xs text-[#899088]">Your photos are processed securely.</p>
+      </div></div>
+    </main>
   );
 }

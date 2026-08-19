@@ -75,19 +75,19 @@ export default function ResultPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">Your Try-On Result</h1>
+    <main className="app-container py-12">
+      <div className="mb-7 text-center"><div className="mb-3 inline-flex rounded-full bg-[#e8efd9] px-3 py-1 text-xs font-bold uppercase tracking-[.16em] text-[#527047]">Look complete ✦</div><h1 className="display-font text-4xl font-extrabold tracking-tight">Your try-on result</h1><p className="mt-2 text-[#737c75]">Drag the slider to reveal your transformation.</p></div>
 
       <div className="flex justify-center gap-2 mb-6">
         <button
           onClick={() => setView('slider')}
-          className={`px-4 py-2 text-sm rounded-lg ${view === 'slider' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'}`}
+          className={`px-4 py-2 text-sm font-bold rounded-full ${view === 'slider' ? 'bg-[#173f2d] text-white' : 'bg-white border border-[#dedfd8] text-gray-700'}`}
         >
           Comparison Slider
         </button>
         <button
           onClick={() => setView('side-by-side')}
-          className={`px-4 py-2 text-sm rounded-lg ${view === 'side-by-side' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'}`}
+          className={`px-4 py-2 text-sm font-bold rounded-full ${view === 'side-by-side' ? 'bg-[#173f2d] text-white' : 'bg-white border border-[#dedfd8] text-gray-700'}`}
         >
           Side by Side
         </button>
@@ -117,7 +117,7 @@ export default function ResultPage() {
       <div className="flex justify-center gap-4">
         <Link
           to="/upload"
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className="btn-primary"
         >
           New Generation
         </Link>
@@ -125,12 +125,12 @@ export default function ResultPage() {
           <a
             href={status.resultImageUrl}
             download
-            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="btn-secondary"
           >
             Download
           </a>
         )}
       </div>
-    </div>
+    </main>
   );
 }
