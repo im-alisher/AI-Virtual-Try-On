@@ -13,11 +13,18 @@ interface Generation {
 }
 
 export default function HistoryPage() {
+  const isSignedIn = Boolean(localStorage.getItem('token'));
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchHistory = useCallback(async () => {
+    if (!isSignedIn) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
     try {
       const res = await api.get<Generation[]>('/api/history');
       setGenerations(res.data);
@@ -26,7 +33,7 @@ export default function HistoryPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isSignedIn]);
 
   useEffect(() => {
     fetchHistory();
@@ -46,6 +53,33 @@ export default function HistoryPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full" />
       </div>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <main className="app-container py-12">
+        <div className="surface mx-auto max-w-2xl px-6 py-20 text-center">
+          <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#e8efe3] text-[#31543c]"><svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M6 10V8a6 6 0 0 1 12 0v2"/><rect x="4" y="10" width="16" height="11" rx="3"/></svg></span>
+          <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#6b856f]">Private wardrobe</p>
+          <h1 className="display-font mt-2 text-3xl font-extrabold">Sign in to see your looks</h1>
+          <p className="mx-auto mt-3 max-w-md leading-7 text-[#737c75]">Your saved try-ons are connected to your account, so they stay private and available across sessions.</p>
+          <div className="mt-7 flex justify-center gap-3"><Link to="/login" className="btn-primary">Sign in</Link><Link to="/signup" className="btn-secondary">Create account</Link></div>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="app-container py-12">
+        <div className="surface mx-auto max-w-2xl px-6 py-16 text-center">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-red-50 text-xl font-bold text-red-600">!</span>
+          <h1 className="display-font mt-4 text-2xl font-extrabold">We could not load your looks</h1>
+          <p className="mt-2 text-[#737c75]">Please make sure the server is running, then try again.</p>
+          <button onClick={fetchHistory} className="btn-secondary mt-6">Try again</button>
+        </div>
+      </main>
     );
   }
 
