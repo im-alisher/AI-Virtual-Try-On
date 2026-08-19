@@ -2,6 +2,12 @@
 
 A production-ready AI Virtual Try-On platform where users can upload a person image and a clothing image, then generate a realistic image showing the person wearing the uploaded clothing.
 
+## Preview
+
+<p align="center">
+  <img src="docs/images/drapeai-landing-page.png" alt="DrapeAI landing page showing an AI virtual try-on before-and-after preview" width="100%" />
+</p>
+
 ## Tech Stack
 
 **Frontend:**
