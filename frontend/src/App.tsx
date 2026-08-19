@@ -4,6 +4,7 @@ import UploadPage from './pages/UploadPage'
 import ResultPage from './pages/ResultPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import HistoryPage from './pages/HistoryPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/result/:id" element={<ResultPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/history" element={<HistoryPage />} />
       </Routes>
     </div>
   )
